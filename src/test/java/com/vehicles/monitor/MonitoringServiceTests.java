@@ -1,6 +1,7 @@
 package com.vehicles.monitor;
 
 import com.vehicles.monitor.config.YAMLConfig;
+import com.vehicles.monitor.model.Company;
 import com.vehicles.monitor.model.VehicleInfoDomain;
 import com.vehicles.monitor.model.VehicleInfoRequest;
 import com.vehicles.monitor.model.VehicleInfoResp;
@@ -9,14 +10,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.yaml.snakeyaml.Yaml;
 
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MonitoringServiceTests {
@@ -28,14 +31,20 @@ public class MonitoringServiceTests {
     @Before
     public void setup() {
         allVehicleStatus = new ConcurrentHashMap<String,VehicleInfoDomain >();
-        yamlConfig = loadYaml();
+        loadYaml();
         monitoringService = new MonitoringServiceImpl(allVehicleStatus, this.yamlConfig);
     }
 
-    private YAMLConfig loadYaml() {
-        Yaml yaml = new Yaml();
-        InputStream in = YAMLConfig.class.getClassLoader().getResourceAsStream("test-application.yml");
-        return yaml.loadAs(in, YAMLConfig.class);
+    private void loadYaml() {
+        yamlConfig = mock(YAMLConfig.class);
+        when(yamlConfig.getTimeout()).thenReturn(10);
+        List<Company> companies = new ArrayList<>();
+        Company testCompany = mock(Company.class);
+        companies.add(testCompany);
+        Map<String, String> vehicle = new HashMap<>();
+        vehicle.put("known_vid", "know_regnr");
+        when(testCompany.getVehicles()).thenReturn(vehicle);
+        when(yamlConfig.getCompanies()).thenReturn(companies);
     }
 
     @Test
@@ -79,8 +88,7 @@ public class MonitoringServiceTests {
     @Test
     public void returnVehiclesWithTimeout() {
         //given
-//        when(yamlConfig.getTimeout()).thenReturn(0);
-        yamlConfig.setTimeout(0);
+        when(yamlConfig.getTimeout()).thenReturn(0);
         monitoringService.updateVehicleStatus(new VehicleInfoRequest("known_vid"));
 
         //when
