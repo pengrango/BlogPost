@@ -7,7 +7,7 @@ Features
 - Provide endpoints to update and view all vehicles 
 - Dockerized with maven-plugin (Create jar and docker image with one command)
 
-##How to run this example :
+## How to run this example :
 
 ```sh
 ##only build java code
@@ -19,7 +19,7 @@ mvn clean install
 ##To start the docker container
  docker run -p 8080:8080 -t [IMAGE_NAME]
 ```
-##Once service is up locally, below endpoints are available
+## Once service is up locally, below endpoints are available
 GET to http://localhost:8080/vehiclelist 
 To view all vehicles's status
 
