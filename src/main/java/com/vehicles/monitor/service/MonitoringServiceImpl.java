@@ -9,10 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.vehicles.monitor.utils.CompanyUtils.statusId;
 
 @Service
 public class MonitoringServiceImpl implements MonitoringService {
@@ -41,10 +42,6 @@ public class MonitoringServiceImpl implements MonitoringService {
             return 1;
         }
         return 0;
-    }
-
-    private String statusId(String companyName, String vehicleId) {
-        return companyName + "-" + vehicleId;
     }
 
     @Override
