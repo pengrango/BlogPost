@@ -1,7 +1,7 @@
 spring:
   profiles: prod
 name: prod-YAML
-timeout: 10
+timeout: 90
 companies:
   - name: Kalles Grustransporter AB
     address: Cementvägen 8, 111 11 Södertälje
