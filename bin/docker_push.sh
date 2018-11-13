@@ -8,6 +8,8 @@ if [ "$TRAVIS_BRANCH" == "master" ]; then
 # Change it accordingly to your docker repo
 pip install --user awscli
 export PATH=$PATH:$HOME/.local/bin
+export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 eval $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
 
 # Build and push

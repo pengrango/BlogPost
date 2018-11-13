@@ -27,3 +27,5 @@ POST to http://localhost:8080/vehicle
 Tell the monitor a specific vehicle is connected at this moment
 Example request:
 {"vehicleId":"VLUR4X20009048066"}
+
+## Extend to full solution 
