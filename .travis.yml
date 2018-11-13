@@ -1,1 +1,19 @@
 language: java
+sudo: required
+services:
+  - docker
+env:
+  - AWS_DEFAULT_REGION=us-east-1
+  - AWS_ACCESS_KEY_ID=AKIAJZPEJCTGUZ367SMQ
+  - AWS_SECRET_ACCESS_KEY=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
+  - IMAGE_NAME=pengrepo
+  - REMOTE_IMAGE_URL=096270182341.dkr.ecr.us-east-1.amazonaws.com/backend-cd
+  - TASK_DEFINITION=task-backend-cd
+  - SERVICE=service-backend-cd
+
+script:
+  - echo "no tests!"
+  - mvn install dockerfile:build
+after_success:
+  - bin/docker_push.sh
+  - bin/ecs_deploy.sh

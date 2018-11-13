@@ -65,7 +65,7 @@
                 <artifactId>dockerfile-maven-plugin</artifactId>
                 <version>1.3.6</version>
                 <configuration>
-                    <repository>${docker.image.prefix}/${project.artifactId}</repository>
+                    <repository>pengrepo</repository>
                     <buildArgs>
                         <JAR_FILE>${project.artifactId}-${project.version}.jar</JAR_FILE>
                     </buildArgs>
