@@ -6,6 +6,7 @@ if [ "$TRAVIS_BRANCH" == "master" ]; then
 
 # This is needed to login on AWS and push the image on ECR
 # Change it accordingly to your docker repo
+pip install --upgrade pip
 pip install --user awscli
 export PATH=$PATH:$HOME/.local/bin
 export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
@@ -14,6 +15,7 @@ eval $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
 
 # Build and push
 #docker build -t $IMAGE_NAME .
+echo "the image name ===== " + $IMAGE_NAME
 echo "Pushing $IMAGE_NAME:latest"
 ls $REMOTE_IMAGE_URL
 docker tag $IMAGE_NAME:latest "$REMOTE_IMAGE_URL:latest"
