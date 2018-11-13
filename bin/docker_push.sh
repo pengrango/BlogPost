@@ -13,6 +13,7 @@ eval $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
 # Build and push
 #docker build -t $IMAGE_NAME .
 echo "Pushing $IMAGE_NAME:latest"
+ls $REMOTE_IMAGE_URL
 docker tag $IMAGE_NAME:latest "$REMOTE_IMAGE_URL:latest"
 docker push "$REMOTE_IMAGE_URL:latest"
 echo "Pushed $IMAGE_NAME:latest, tagged with $REMOTE_IMAGE_URL:latest"
