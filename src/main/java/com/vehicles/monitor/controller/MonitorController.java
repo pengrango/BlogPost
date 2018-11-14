@@ -3,7 +3,9 @@ package com.vehicles.monitor.controller;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.vehicles.monitor.UnknownQueryException;
 import com.vehicles.monitor.config.YAMLConfig;
+import com.vehicles.monitor.model.Filter;
 import com.vehicles.monitor.model.UpdateResult;
 import com.vehicles.monitor.model.VehicleInfoRequest;
 import com.vehicles.monitor.model.VehicleInfoResp;
@@ -35,9 +37,23 @@ public class MonitorController {
     }
 
     @CrossOrigin(origins = {"*"})
-    @RequestMapping("/vehiclelist")
-    public List<VehicleInfoResp> getVehicleList() {
+    @RequestMapping("/allvehicles")
+    public List<VehicleInfoResp> getAllVehicles() {
         List list = monitoringService.getAllVehicles();
         return list;
     }
+
+    @CrossOrigin(origins = {"*"})
+    @RequestMapping(value="/vehicles",  method = RequestMethod.POST)
+    public ResponseEntity getVehicles(@RequestBody Filter filter, HttpServletResponse response) {
+        List list = null;
+        try {
+            list = monitoringService.getVehicles(filter.getField(), filter.getValue());
+            return new ResponseEntity<List>(list, HttpStatus.OK);
+        } catch (UnknownQueryException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
 }

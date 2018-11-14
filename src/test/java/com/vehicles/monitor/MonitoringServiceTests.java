@@ -1,6 +1,8 @@
 package com.vehicles.monitor;
 
+import com.hazelcast.core.ReplicatedMap;
 import com.vehicles.monitor.config.YAMLConfig;
+import com.vehicles.monitor.dao.VehicleStore;
 import com.vehicles.monitor.model.Company;
 import com.vehicles.monitor.model.VehicleInfoDomain;
 import com.vehicles.monitor.model.VehicleInfoRequest;
@@ -11,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,14 +28,29 @@ import static org.mockito.Mockito.when;
 public class MonitoringServiceTests {
 
     YAMLConfig yamlConfig;
-    Map<String, VehicleInfoDomain> allVehicleStatus;
     MonitoringServiceImpl monitoringService;
+    VehicleStore store;
+    public final String COMPANY = "Alten AB";
+    public final String ADDR = "kista";
+    public final String VID = "known_vid";
+    public final String REG_NR = "known_regNr";
 
     @Before
     public void setup() {
-        allVehicleStatus = new ConcurrentHashMap<String,VehicleInfoDomain >();
+        VehicleInfoDomain vehicleInfoDomain = new VehicleInfoDomain(VID, REG_NR, COMPANY, ADDR);
+        List<VehicleInfoDomain> vehicles = new ArrayList();
+        vehicles.add(vehicleInfoDomain);
+        Map<String, List<VehicleInfoDomain>> companyToVehicles = new HashMap<>();
+        Map<String, List<VehicleInfoDomain>> vidToVehicles = new HashMap<String, List<VehicleInfoDomain>>();
+        Map<String, LocalDateTime> vidToTime =  new HashMap<String, LocalDateTime>();
+
+        vidToTime.put(VID, LocalDateTime.now().minusSeconds(10));
+        companyToVehicles.put(COMPANY, vehicles);
+        vidToVehicles.put(VID,  vehicles);
+
         loadYaml();
-        monitoringService = new MonitoringServiceImpl(allVehicleStatus, this.yamlConfig);
+        store = new VehicleStore(yamlConfig, companyToVehicles, vidToVehicles, vidToTime);
+        monitoringService = new MonitoringServiceImpl(store);
     }
 
     private void loadYaml() {
@@ -41,16 +59,12 @@ public class MonitoringServiceTests {
         List<Company> companies = new ArrayList<>();
         Company testCompany = mock(Company.class);
         companies.add(testCompany);
-        Map<String, String> vehicle = new HashMap<>();
-        vehicle.put("known_vid", "know_regnr");
-        when(testCompany.getVehicles()).thenReturn(vehicle);
-        when(yamlConfig.getCompanies()).thenReturn(companies);
     }
 
     @Test
     public void updateVehicleStatusSuccessTest() {
         //given
-        VehicleInfoRequest exampleReq = new VehicleInfoRequest("known_vid");
+        VehicleInfoRequest exampleReq = new VehicleInfoRequest(VID);
 
         //when
         int numUpdated = monitoringService.updateVehicleStatus(exampleReq);

@@ -18,12 +18,21 @@ public class VehicleInfoResp {
         this.connected = connected;
     }
 
-    public static VehicleInfoResp fromDomain(VehicleInfoDomain infoDomain, LocalDateTime now, int timeout) {
+    public static VehicleInfoResp fromDomain(VehicleInfoDomain infoDomain, boolean isConnected) {
+//        return new VehicleInfoResp(infoDomain.getVehicleId(),
+//                infoDomain.getRegNr(),
+//                infoDomain.getCompanyName(),
+//                infoDomain.getCompanyAddress(),
+//                isConnected ? "YES" : "NO");
+        return fromDomain(infoDomain, isConnected ? "YES" : "NO");
+    }
+
+    public static VehicleInfoResp fromDomain(VehicleInfoDomain infoDomain, String status) {
         return new VehicleInfoResp(infoDomain.getVehicleId(),
                 infoDomain.getRegNr(),
                 infoDomain.getCompanyName(),
                 infoDomain.getCompanyAddress(),
-                now.minusSeconds(timeout).isBefore(infoDomain.getLastUpdate()) ? "YES" : "NO");
+                status);
     }
 
     public String getVehicleId() {
