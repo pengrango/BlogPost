@@ -60,7 +60,7 @@ public class MonitorControllerTest {
        when(monitoringService.getAllVehicles()).thenReturn(vehicles);
 
        //then
-       mockMvc.perform(get("/vehiclelist"))
+       mockMvc.perform(get("/allvehicles"))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$[0].vehicleId", is(VEHICLE_ID)))
                .andExpect(jsonPath("$[0].companyName", is(COMPANY_NAME)))
